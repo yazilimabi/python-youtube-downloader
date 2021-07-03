@@ -5,11 +5,18 @@ from pytube import YouTube
 import threading
 import os
 
+########################Classes########################
+class videoItem:
+    def __init__(self, video, onlyAudio):
+        self.video = video
+        self.onlyAudio = onlyAudio
+
+    
 ########################Functions########################
 def refreshListbox():
     lb.delete('0','end')
-    for video in queue:
-        lb.insert('end',video.title)
+    for item in queue:
+        lb.insert('end',item.video.title)
 
 def addVideo():
     threading.Thread(target=addVideoToQueue).start()
@@ -18,9 +25,10 @@ def addVideoToQueue():
     try:
         addButton["state"] = DISABLED
         notification['text'] = "Adding Video To Queue..."
+        audio = checkboxOutput.get()
         url = YouTube(str(link.get()))
-        video = url.streams.filter(only_audio=bool(checkboxOutput.get())).first()
-        queue.append(video)
+        video = url.streams.filter(only_audio=audio).first()
+        queue.append(videoItem(video,audio))
         refreshListbox()
         notification['text'] = video.title + "\nSuccessfully Added To Queue"
         if not downloading:
@@ -49,9 +57,9 @@ def downloadVideo():
     try:
         global downloading
         downloading = True
-        video = queue[0]
+        video = queue[0].video
         videopath = video.download(output_path=filename)
-        if(checkboxOutput.get()):
+        if(queue[0].onlyAudio):
             base, ext = os.path.splitext(videopath)
             new_file = base + '.mp3'
             os.rename(videopath, new_file)
