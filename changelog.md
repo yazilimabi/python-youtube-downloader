@@ -1,5 +1,15 @@
 # Changelog
 
+## [1.2] - 04.07.2021
+
+### Added
+- Resolution updated to 800x500
+- Added "Delete Selection From Queue" button to remove videos from queue
+- Added right-click menu to input
+
+### Fixed
+- Cannot right-click to input
+
 ## [1.1 Hotfix] - 04.07.2021
 
 ### Added
